@@ -1,60 +1,50 @@
-import { Component } from 'react';
-import styles from './searchbar.module.scss';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { FaSistrix } from 'react-icons/fa';
+import styles from './searchbar.module.scss';
+import initialState from './initialState';
 
-class Searchbar extends Component {
-  state = {
-    search: '',
-  };
+const Searchbar = ({ onSubmit }) => {
+  const [state, setState] = useState({ ...initialState });
 
-  handleChange = ({ target }) => {
+  const handleChange = ({ target }) => {
     const { name, value } = target;
-    this.setState({ [name]: value });
-  };
-
-  handleSubmit = e => {
-    e.preventDefault();
-    const { onSubmit } = this.props;
-    onSubmit({ ...this.state });
-    this.reset();
-  };
-
-  reset() {
-    this.setState({
-      search: '',
+    setState(prevState => {
+      return { ...prevState, [name]: value };
     });
-  }
+  };
 
-  render() {
-    const { search } = this.state;
-    const { handleChange, handleSubmit } = this;
-    return (
-      <>
-        <header className={styles.Searchbar}>
-          <form className={styles.SearchForm} onSubmit={handleSubmit}>
-            <button type="submit" className={styles.SearchFormButton}>
-              <FaSistrix size={20} />
-              <span className={styles.SearchFormButtonLabel}>Search</span>
-            </button>
+  const handleSubmit = e => {
+    e.preventDefault();
+    onSubmit({ ...state });
+    setState({ ...initialState });
+  };
 
-            <input
-              className={styles.SearchFormInput}
-              name="search"
-              type="text"
-              autoComplete="off"
-              autoFocus
-              placeholder="Search images and photos"
-              value={search}
-              onChange={handleChange}
-              required
-            />
-          </form>
-        </header>
-      </>
-    );
-  }
-}
+  const { search } = state;
+
+  return (
+    <header className={styles.Searchbar}>
+      <form className={styles.SearchForm} onSubmit={handleSubmit}>
+        <button type="submit" className={styles.SearchFormButton}>
+          <FaSistrix size={20} />
+          <span className={styles.SearchFormButtonLabel}>Search</span>
+        </button>
+
+        <input
+          className={styles.SearchFormInput}
+          name="search"
+          type="text"
+          autoComplete="off"
+          autoFocus
+          placeholder="Search images and photos"
+          value={search}
+          onChange={handleChange}
+          required
+        />
+      </form>
+    </header>
+  );
+};
 
 export default Searchbar;
 
