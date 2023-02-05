@@ -61,8 +61,11 @@ const PostSearch = () => {
   return (
     <div className={styles.App}>
       <Searchbar onSubmit={searchImg} />
+
+      {items.length !== 0 && (
+        <ImageGallery items={items} openModal={openModal} />
+      )}
       {isLoading && <Loader />}
-      <ImageGallery items={items} openModal={openModal} />
       {Boolean(totalHits) && totalHits !== items.length && !isLoading && (
         <LoadMoreBtn type="button" onClick={loadMore} />
       )}
